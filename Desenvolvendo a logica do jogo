@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <string.h>
+
+// Estrutura para representar uma carta do Super Trunfo
+typedef struct {
+    char estado[30];
+    char codigo[10];
+    char nome_cidade[50];
+    int populacao;
+    float area;
+    float pib;
+    int pontos_turisticos;
+    float densidade_populacional;
+    float pib_per_capita;
+} Carta;
+
+// Função para calcular densidade populacional e PIB per capita
+void calcularIndicadores(Carta *carta) {
+    carta->densidade_populacional = carta->populacao / carta->area;
+    carta->pib_per_capita = carta->pib / carta->populacao;
+}
+
+// Função para exibir os dados de uma carta
+void exibirCarta(Carta carta, int numero) {
+    printf("Carta %d - %s (%s):\n", numero, carta.nome_cidade, carta.estado);
+    printf("População: %d\n", carta.populacao);
+    printf("Área: %.2f km²\n", carta.area);
+    printf("PIB: %.2f bilhões\n", carta.pib);
+    printf("Pontos turísticos: %d\n", carta.pontos_turisticos);
+    printf("Densidade Populacional: %.2f hab/km²\n", carta.densidade_populacional);
+    printf("PIB per capita: %.2f\n", carta.pib_per_capita);
+    printf("--------------------------\n");
+}
+
+// Função para comparar as cartas com base em um atributo
+void compararCartas(Carta c1, Carta c2) {
+    // Escolha do atributo para comparação: pode ser "populacao", "area", "pib", "densidade", ou "pib_per_capita"
+    const char atributo[] = "pib";  // <<== ALTERE AQUI para mudar o atributo comparado
+
+    printf("Comparação de cartas (Atributo: %s):\n\n", atributo);
+
+    float valor1, valor2;
+
+    if (strcmp(atributo, "populacao") == 0) {
+        valor1 = c1.populacao;
+        valor2 = c2.populacao;
+    } else if (strcmp(atributo, "area") == 0) {
+        valor1 = c1.area;
+        valor2 = c2.area;
+    } else if (strcmp(atributo, "pib") == 0) {
+        valor1 = c1.pib;
+        valor2 = c2.pib;
+    } else if (strcmp(atributo, "densidade") == 0) {
+        valor1 = c1.densidade_populacional;
+        valor2 = c2.densidade_populacional;
+    } else if (strcmp(atributo, "pib_per_capita") == 0) {
+        valor1 = c1.pib_per_capita;
+        valor2 = c2.pib_per_capita;
+    } else {
+        printf("Atributo inválido.\n");
+        return;
+    }
+
+    // Exibir os valores comparados
+    printf("Carta 1 - %s (%s): %.2f\n", c1.nome_cidade, c1.estado, valor1);
+    printf("Carta 2 - %s (%s): %.2f\n", c2.nome_cidade, c2.estado, valor2);
+
+    // Determinar a carta vencedora
+    if (strcmp(atributo, "densidade") == 0) {
+        if (valor1 < valor2) {
+            printf("\nResultado: Carta 1 (%s) venceu!\n", c1.nome_cidade);
+        } else if (valor2 < valor1) {
+            printf("\nResultado: Carta 2 (%s) venceu!\n", c2.nome_cidade);
+        } else {
+            printf("\nResultado: Empate!\n");
+        }
+    } else {
+        if (valor1 > valor2) {
+            printf("\nResultado: Carta 1 (%s) venceu!\n", c1.nome_cidade);
+        } else if (valor2 > valor1) {
+            printf("\nResultado: Carta 2 (%s) venceu!\n", c2.nome_cidade);
+        } else {
+            printf("\nResultado: Empate!\n");
+        }
+    }
+}
+
+int main() {
+    // Cadastro das cartas
+    Carta carta1 = {"SP", "C001", "São Paulo", 12300000, 1521.11, 699.28, 30};
+    Carta carta2 = {"RJ", "C002", "Rio de Janeiro", 6710000, 1182.30, 411.60, 25};
+
+    // Calcular densidade e PIB per capita
+    calcularIndicadores(&carta1);
+    calcularIndicadores(&carta2);
+
+    // Exibir as cartas
+    exibirCarta(carta1, 1);
+    exibirCarta(carta2, 2);
+
+    // Comparar as cartas
+    compararCartas(carta1, carta2);
+
+    return 0;
+}
